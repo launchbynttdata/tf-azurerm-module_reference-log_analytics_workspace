@@ -22,12 +22,6 @@ variable "retention_in_days" {
   default     = "30"
 }
 
-variable "local_authentication_disabled" {
-  type        = bool
-  description = "Boolean flag to specify whether local authentication should be disabled. Defaults to false."
-  default     = false
-}
-
 variable "identity" {
   type = object({
     type         = string
@@ -98,5 +92,3 @@ variable "tags" {
   description = "A mapping of tags to assign to the resource."
   default     = {}
 }
-
-

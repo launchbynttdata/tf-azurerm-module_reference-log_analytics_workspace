@@ -37,9 +37,9 @@ module "resource_group" {
   tags = merge(var.tags, { resource_name = module.resource_names["resource_group"].standard })
 }
 
-module "azurerm_log_analytics_workspace"{
-  source  = "terraform.registry.launch.nttdata.com/module_primitive/log_analytics_workspace/azurerm"
-  version = "~> 1.0"
+module "azurerm_log_analytics_workspace" {
+  source                        = "terraform.registry.launch.nttdata.com/module_primitive/log_analytics_workspace/azurerm"
+  version                       = "~> 1.0"
   name                          = var.name
   location                      = var.location
   resource_group_name           = var.resource_group_name
@@ -48,4 +48,5 @@ module "azurerm_log_analytics_workspace"{
   local_authentication_disabled = var.local_authentication_disabled
   identity                      = var.identity
   tags                          = local.tags
+  depends_on                    = [module.resource_group]
 }

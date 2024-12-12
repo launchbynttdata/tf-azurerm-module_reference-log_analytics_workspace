@@ -37,7 +37,7 @@ module "resource_group" {
 }
 
 module "log_analytics_workspace" {
-  source  = "../.."
+  source = "../.."
 
   name                = module.resource_names["log_analytics_workspace"].minimal_random_suffix
   location            = var.location
@@ -46,5 +46,6 @@ module "log_analytics_workspace" {
   retention_in_days   = var.retention_in_days
   identity            = var.identity
 
-  tags = merge(var.tags, { resource_name = module.resource_names["log_analytics_workspace"].minimal_random_suffix })
+  tags       = merge(var.tags, { resource_name = module.resource_names["log_analytics_workspace"].minimal_random_suffix })
+  depends_on = [module.resource_group]
 }
