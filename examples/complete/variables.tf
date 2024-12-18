@@ -69,13 +69,13 @@ variable "instance_resource" {
   default     = 0
 }
 
-variable "logical_product_family" {
+variable "product_family" {
   type        = string
   description = "Name of the product family for which the resource is created."
   default     = "launch"
 }
 
-variable "logical_product_service" {
+variable "product_service" {
   type        = string
   description = "Name of the product service for which the resource is created."
   default     = "law"

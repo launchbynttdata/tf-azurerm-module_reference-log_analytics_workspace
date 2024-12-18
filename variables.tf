@@ -93,32 +93,26 @@ variable "instance_resource" {
   }
 }
 
-variable "logical_product_family" {
+variable "product_family" {
   type        = string
-  description = <<EOF
-    (Required) Name of the product family for which the resource is created.
-    Example: org_name, department_name.
-  EOF
+  description = "(Required) Name of the product family for which the resource is created"
   nullable    = false
 
   validation {
-    condition     = can(regex("^[_\\-A-Za-z0-9]+$", var.logical_product_family))
+    condition     = can(regex("^[_\\-A-Za-z0-9]+$", var.product_family))
     error_message = "The variable must contain letters, numbers, -, _, and .."
   }
 
   default = "launch"
 }
 
-variable "logical_product_service" {
+variable "product_service" {
   type        = string
-  description = <<EOF
-    (Required) Name of the product service for which the resource is created.
-    For example, backend, frontend, middleware etc.
-  EOF
+  description = "(Required) Name of the product service for which the resource is created"
   nullable    = false
 
   validation {
-    condition     = can(regex("^[_\\-A-Za-z0-9]+$", var.logical_product_service))
+    condition     = can(regex("^[_\\-A-Za-z0-9]+$", var.product_service))
     error_message = "The variable must contain letters, numbers, -, _, and .."
   }
 
@@ -148,4 +142,3 @@ variable "tags" {
   description = "(Optional) A mapping of tags to assign to the resource."
   default     = {}
 }
-
