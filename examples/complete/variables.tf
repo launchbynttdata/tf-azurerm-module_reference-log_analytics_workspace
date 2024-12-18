@@ -57,13 +57,19 @@ variable "resource_names_map" {
   }
 }
 
-variable "instance_env" {
+variable "environment" {
+  type        = string
+  description = "Environment where resource is going to be deployed. For example. dev, qa, uat"
+  default     = "dev"
+}
+
+variable "environment_number" {
   type        = number
   description = "Number that represents the instance of the environment."
   default     = 0
 }
 
-variable "instance_resource" {
+variable "resource_number" {
   type        = number
   description = "Number that represents the instance of the resource."
   default     = 0
@@ -79,12 +85,6 @@ variable "product_service" {
   type        = string
   description = "Name of the product service for which the resource is created."
   default     = "law"
-}
-
-variable "class_env" {
-  type        = string
-  description = "(Required) Environment where resource is going to be deployed. For example. dev, qa, uat"
-  default     = "dev"
 }
 
 variable "tags" {

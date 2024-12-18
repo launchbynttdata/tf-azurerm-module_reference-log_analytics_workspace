@@ -19,11 +19,11 @@ module "resource_names" {
   logical_product_family  = var.product_family
   logical_product_service = var.product_service
   region                  = var.location
-  class_env               = var.class_env
+  class_env               = var.environment
   cloud_resource_type     = each.value.name
-  instance_env            = var.instance_env
+  instance_env            = var.environment_number
   maximum_length          = each.value.max_length
-  instance_resource       = var.instance_resource
+  instance_resource       = var.resource_number
 }
 
 module "resource_group" {
