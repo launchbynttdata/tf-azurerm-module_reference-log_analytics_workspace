@@ -38,11 +38,12 @@ module "resource_group" {
 }
 
 module "azurerm_log_analytics_workspace" {
-  source                        = "terraform.registry.launch.nttdata.com/module_primitive/log_analytics_workspace/azurerm"
-  version                       = "~> 1.0"
-  name                          = var.name
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/log_analytics_workspace/azurerm"
+  version = "~> 1.0"
+
+  name                          = module.resource_names["log_analytics_workspace"].standard
   location                      = var.location
-  resource_group_name           = var.resource_group_name
+  resource_group_name           = module.resource_names["resource_group"].standard
   sku                           = var.sku
   retention_in_days             = var.retention_in_days
   local_authentication_disabled = var.local_authentication_disabled
