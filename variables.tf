@@ -10,11 +10,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-variable "name" {
-  type        = string
-  description = "(Required) Specifies the name of the Log Analytics Workspace. Workspace name should include 4-63 letters, digits or '-'. The '-' shouldn't be the first or the last symbol. Changing this forces a new resource to be created."
-}
-
 variable "sku" {
   type        = string
   description = "(Optional) Specifies the SKU of the Log Analytics Workspace. Possible values are Free, PerNode, Premium, Standard, Standalone, Unlimited, CapacityReservation, and PerGB2018 (new SKU as of 2018-04-03). Defaults to PerGB2018."
