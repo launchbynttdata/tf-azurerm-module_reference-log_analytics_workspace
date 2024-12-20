@@ -149,9 +149,10 @@ No resources.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_id"></a> [id](#output\_id) | The Log Analytics Workspace ID. |
+| <a name="output_id"></a> [id](#output\_id) | The Log Analytics resource ID. |
 | <a name="output_name"></a> [name](#output\_name) | The Log Analytics Workspace name. |
 | <a name="output_workspace_id"></a> [workspace\_id](#output\_workspace\_id) | The Workspace (or Customer) ID for the Log Analytics Workspace. |
 | <a name="output_primary_shared_key"></a> [primary\_shared\_key](#output\_primary\_shared\_key) | Value of the primary shared key for the Log Analytics Workspace. |
 | <a name="output_secondary_shared_key"></a> [secondary\_shared\_key](#output\_secondary\_shared\_key) | Value of the secondary shared key for the Log Analytics Workspace. |
+| <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | The Log Analytics resource group name |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -11,7 +11,7 @@
 // limitations under the License.
 
 output "id" {
-  description = "The Log Analytics Workspace ID."
+  description = "The Log Analytics resource ID."
   value       = module.azurerm_log_analytics_workspace.id
 }
 
@@ -33,5 +33,9 @@ output "primary_shared_key" {
 output "secondary_shared_key" {
   description = "Value of the secondary shared key for the Log Analytics Workspace."
   value       = module.azurerm_log_analytics_workspace.secondary_shared_key
+}
 
+output "resource_group_name" {
+  description = "The Log Analytics resource group name"
+  value       = module.resource_names["resource_group"].standard
 }

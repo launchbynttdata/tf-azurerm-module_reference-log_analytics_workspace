@@ -11,7 +11,7 @@
 // limitations under the License.
 
 output "id" {
-  description = "The Log Analytics Workspace ID."
+  description = "The Log Analytics resource ID."
   value       = module.log_analytics_workspace.id
 }
 
@@ -25,4 +25,7 @@ output "workspace_name" {
   value       = module.log_analytics_workspace.name
 }
 
-
+output "resource_group_name" {
+  description = "The Log Analytics Workspace resource group name"
+  value       = module.log_analytics_workspace.resource_group_name
+}
