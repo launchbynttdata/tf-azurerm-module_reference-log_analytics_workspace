@@ -10,42 +10,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module "resource_names" {
-  source  = "terraform.registry.launch.nttdata.com/module_library/resource_name/launch"
-  version = "~> 2.0"
-
-  for_each = var.resource_names_map
-
-  logical_product_family  = var.product_family
-  logical_product_service = var.product_service
-  region                  = var.location
-  class_env               = var.environment
-  cloud_resource_type     = each.value.name
-  instance_env            = var.environment_number
-  maximum_length          = each.value.max_length
-  instance_resource       = var.resource_number
-}
-
-module "resource_group" {
-  source  = "terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm"
-  version = "~> 1.0"
-
-  name     = module.resource_names["resource_group"].standard
-  location = var.location
-
-  tags = merge(var.tags, { resource_name = module.resource_names["resource_group"].standard })
-}
-
 module "log_analytics_workspace" {
   source = "../.."
 
-  name                = module.resource_names["log_analytics_workspace"].minimal_random_suffix
-  location            = var.location
-  resource_group_name = module.resource_names["resource_group"].standard
-  sku                 = var.sku
-  retention_in_days   = var.retention_in_days
-  identity            = var.identity
-
-  tags       = merge(var.tags, { resource_name = module.resource_names["log_analytics_workspace"].minimal_random_suffix })
-  depends_on = [module.resource_group]
+  location          = var.location
+  sku               = var.sku
+  retention_in_days = var.retention_in_days
 }

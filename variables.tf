@@ -61,11 +61,6 @@ variable "resource_names_map" {
   }
 }
 
-variable "resource_group_name" {
-  type        = string
-  description = "(Required) The name of the resource group in which the Log Analytics workspace is created. Changing this forces a new resource to be created."
-}
-
 variable "instance_env" {
   type        = number
   description = "Number that represents the instance of the environment."
