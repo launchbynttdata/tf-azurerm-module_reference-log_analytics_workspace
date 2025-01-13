@@ -18,12 +18,12 @@ variable "location" {
 
 variable "sku" {
   type        = string
-  description = "Specifies the SKU of the Log Analytics Workspace. Possible values are Free, PerNode, Premium, Standard, Standalone, Unlimited, CapacityReservation, and PerGB2018 (new SKU as of 2018-04-03). Defaults to PerGB2018."
-  default     = "Free"
+  description = "Specifies the SKU of the Log Analytics Workspace. Possible values are PerNode, Standalone, Unlimited, CapacityReservation, and PerGB2018. Defaults to PerGB2018. Premium and Standard do not work as per testing."
+  default     = null
 }
 
 variable "retention_in_days" {
   type        = number
-  description = "The workspace data retention in days. Possible values are either 7 (Free Tier only) or range between 30 and 730."
-  default     = "30"
+  description = "The workspace data retention in days. Possible values are of the range between 30 and 730."
+  default     = 30
 }

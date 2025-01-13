@@ -12,14 +12,18 @@
 
 variable "sku" {
   type        = string
-  description = "(Optional) Specifies the SKU of the Log Analytics Workspace. Possible values are Free, PerNode, Premium, Standard, Standalone, Unlimited, CapacityReservation, and PerGB2018 (new SKU as of 2018-04-03). Defaults to PerGB2018."
-  default     = "Free"
+  description = "(Optional) Specifies the SKU of the Log Analytics Workspace. Possible values are PerNode, Standalone, Unlimited, CapacityReservation, and PerGB2018. Defaults to PerGB2018. Premium and Standard do not work as per testing."
+  default     = null
 }
 
 variable "retention_in_days" {
   type        = number
-  description = "(Optional) The workspace data retention in days. Possible values are either 7 (Free Tier only) or range between 30 and 730."
+  description = "(Optional) The workspace data retention in days. Possible values are in the range between 30 and 730."
   default     = "30"
+  validation {
+    condition     = var.retention_in_days >= 30 && var.retention_in_days <= 730
+    error_message = "retention_in_days should be between 30 to 730."
+  }
 }
 
 variable "local_authentication_disabled" {
@@ -33,7 +37,11 @@ variable "identity" {
     type         = string
     identity_ids = optional(list(string))
   })
-  description = "(Optional) A identity block as defined below."
+  description = <<EOF
+  (Optional) A identity block as defined below.
+  - type Specifies the identity type of the Log Analytics Workspace. Possible values are SystemAssigned (where Azure will generate a Service Principal for you) and UserAssigned where you can specify the Service Principal IDs in the identity_ids field.
+  - identity_ids Specifies the list of User Assigned Identity IDs to be associated with the Log Analytics Workspace. This field is required when type is UserAssigned.
+  EOF
   default     = null
 }
 
@@ -43,7 +51,7 @@ variable "location" {
 }
 
 variable "resource_names_map" {
-  description = "A map of key to resource_name that will be used by tf-launch-module_library-resource_name to generate resource names"
+  description = "(Optional) A map of key to resource_name that will be used by tf-launch-module_library-resource_name to generate resource names"
   type = map(object({
     name       = string
     max_length = optional(number, 60)
@@ -63,7 +71,7 @@ variable "resource_names_map" {
 
 variable "instance_env" {
   type        = number
-  description = "Number that represents the instance of the environment."
+  description = "(Optional) Number that represents the instance of the environment."
   default     = 0
 
   validation {
@@ -74,7 +82,7 @@ variable "instance_env" {
 
 variable "instance_resource" {
   type        = number
-  description = "Number that represents the instance of the resource."
+  description = "(Optional) Number that represents the instance of the resource."
   default     = 0
 
   validation {
@@ -122,7 +130,7 @@ variable "class_env" {
 }
 
 variable "use_azure_region_abbr" {
-  description = "Whether to use Azure region abbreviation e.g. eastus -> eus"
+  description = "(Optional) Whether to use Azure region abbreviation e.g. eastus -> eus"
   type        = bool
   default     = true
 }
