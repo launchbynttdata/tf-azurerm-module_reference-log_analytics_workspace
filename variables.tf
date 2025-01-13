@@ -106,7 +106,7 @@ variable "product_service" {
     error_message = "The variable must contain letters, numbers, -, _, and .."
   }
 
-  default = "logaw"
+  default = "law"
 }
 
 variable "class_env" {
