@@ -19,7 +19,7 @@ variable "sku" {
 variable "retention_in_days" {
   type        = number
   description = "(Optional) The workspace data retention in days. Possible values are in the range between 30 and 730."
-  default     = "30"
+  default     = 30
   validation {
     condition     = var.retention_in_days >= 30 && var.retention_in_days <= 730
     error_message = "retention_in_days should be between 30 to 730."
