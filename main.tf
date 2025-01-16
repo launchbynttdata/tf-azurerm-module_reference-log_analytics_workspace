@@ -39,7 +39,7 @@ module "resource_group" {
 
 module "azurerm_log_analytics_workspace" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/log_analytics_workspace/azurerm"
-  version = "~> 1.0"
+  version = "~> 1.2"
 
   name                          = module.resource_names["log_analytics_workspace"].standard
   location                      = var.location
