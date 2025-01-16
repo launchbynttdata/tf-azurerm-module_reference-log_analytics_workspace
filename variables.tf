@@ -12,8 +12,12 @@
 
 variable "sku" {
   type        = string
-  description = "(Optional) Specifies the SKU of the Log Analytics Workspace. Possible values are PerNode, Standalone, Unlimited, CapacityReservation, and PerGB2018. Defaults to PerGB2018. Premium and Standard do not work as per testing."
+  description = "(Optional) Specifies the SKU of the Log Analytics Workspace. Possible values are PerNode, Standalone, Unlimited, CapacityReservation, and PerGB2018. Defaults to PerGB2018. Free, Premium, and Standard do not work as per testing."
   default     = null
+  validation {
+    condition     = var.sku == null || can(regex("^(PerNode|Standalone|Unlimited|CapacityReservation|PerGB2018)$", var.sku))
+    error_message = "SKU must be one of 'PerNode', 'Standalone', 'Unlimited', 'CapacityReservation', and 'PerGB2018'"
+  }
 }
 
 variable "retention_in_days" {
