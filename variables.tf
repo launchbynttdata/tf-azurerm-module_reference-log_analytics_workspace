@@ -39,8 +39,8 @@ variable "identity" {
   })
   description = <<EOF
   (Optional) A identity block as defined below.
-  - type Specifies the identity type of the Log Analytics Workspace. Possible values are SystemAssigned (where Azure will generate a Service Principal for you) and UserAssigned where you can specify the Service Principal IDs in the identity_ids field.
-  - identity_ids Specifies the list of User Assigned Identity IDs to be associated with the Log Analytics Workspace. This field is required when type is UserAssigned.
+  type: Specifies the identity type of the Log Analytics Workspace. Possible values are SystemAssigned and UserAssigned.
+  identity_ids: Specifies the list of User Assigned Identity IDs to be associated with the Log Analytics Workspace. This field is required when type is UserAssigned.
   EOF
   default     = null
 }
