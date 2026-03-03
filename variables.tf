@@ -70,6 +70,14 @@ variable "resource_names_map" {
       name       = "rg"
       max_length = 60
     }
+    monitor_action_group = {
+      name       = "mag"
+      max_length = 60
+    }
+    scheduled_query_alert = {
+      name       = "sqa"
+      max_length = 60
+    }
   }
 }
 
@@ -143,4 +151,31 @@ variable "tags" {
   type        = map(string)
   description = "(Optional) A mapping of tags to assign to the resource."
   default     = {}
+}
+
+variable "query_alerts" {
+  description = "Map of scheduled query alerts to create"
+  type = map(object({
+    description            = string
+    enabled                = bool
+    query                  = string
+    severity               = number
+    frequency              = number
+    time_window            = number
+    trigger_operator       = string
+    trigger_threshold      = number
+    email_subject          = optional(string)
+    custom_webhook_payload = optional(map(string))
+  }))
+  default = {}
+}
+
+variable "action_group_config" {
+  description = "Configuration for action group (created only if alerts exist)"
+  type = object({
+    short_name         = string
+    arm_role_receivers = optional(list(any), [])
+    email_receivers    = optional(list(any), [])
+  })
+  default = null
 }

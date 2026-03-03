@@ -51,3 +51,56 @@ module "azurerm_log_analytics_workspace" {
   tags                          = local.tags
   depends_on                    = [module.resource_group]
 }
+
+module "monitor_action_group" {
+  count = length(var.query_alerts) > 0 && var.action_group_config != null ? 1 : 0
+
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/monitor_action_group/azurerm"
+  version = "~> 1.0"
+
+  action_group_name   = module.resource_names["monitor_action_group"].standard
+  resource_group_name = module.resource_group.name
+  short_name          = var.action_group_config.short_name
+  arm_role_receivers  = var.action_group_config.arm_role_receivers
+  email_receivers     = var.action_group_config.email_receivers
+
+  tags = merge(local.tags, {
+    resource_name = module.resource_names["monitor_action_group"].standard
+  })
+
+  depends_on = [module.resource_group]
+}
+module "scheduled_query_alert" {
+  for_each = var.query_alerts
+
+  source = "git::ssh://git@github.com/launchbynttdata/tf-azurerm-module_primitive-monitor_scheduled_query_alert.git?ref=feature/10489-query-alert"
+
+  resource_group_name = module.resource_group.name
+  location            = var.location
+
+  alert_name = "${module.resource_names["scheduled_query_alert"].standard}-${each.key}"
+
+  data_source_id = module.azurerm_log_analytics_workspace.id
+
+  description = each.value.description
+  enabled     = each.value.enabled
+  query       = each.value.query
+  severity    = each.value.severity
+  frequency   = each.value.frequency
+  time_window = each.value.time_window
+
+  trigger_operator  = each.value.trigger_operator
+  trigger_threshold = each.value.trigger_threshold
+
+  action_group_ids = length(module.monitor_action_group) > 0 ? [module.monitor_action_group[0].action_group_id] : []
+
+  tags = merge(local.tags, {
+    resource_name = "${module.resource_names["scheduled_query_alert"].standard}-${each.key}"
+  })
+
+  depends_on = [
+    module.resource_group,
+    module.azurerm_log_analytics_workspace,
+    module.monitor_action_group
+  ]
+}
