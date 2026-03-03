@@ -123,7 +123,7 @@ No providers.
 | <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm | ~> 1.0 |
 | <a name="module_azurerm_log_analytics_workspace"></a> [azurerm\_log\_analytics\_workspace](#module\_azurerm\_log\_analytics\_workspace) | terraform.registry.launch.nttdata.com/module_primitive/log_analytics_workspace/azurerm | ~> 1.2 |
 | <a name="module_monitor_action_group"></a> [monitor\_action\_group](#module\_monitor\_action\_group) | terraform.registry.launch.nttdata.com/module_primitive/monitor_action_group/azurerm | ~> 1.0 |
-| <a name="module_scheduled_query_alert"></a> [scheduled\_query\_alert](#module\_scheduled\_query\_alert) | git::ssh://git@github.com/launchbynttdata/tf-azurerm-module_primitive-monitor_scheduled_query_alert.git | feature/10489-query-alert |
+| <a name="module_scheduled_query_alert"></a> [scheduled\_query\_alert](#module\_scheduled\_query\_alert) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-monitor_scheduled_query_alert.git | feature/10489-query-alert |
 
 ## Resources
 
