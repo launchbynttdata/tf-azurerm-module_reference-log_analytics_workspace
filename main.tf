@@ -73,7 +73,7 @@ module "monitor_action_group" {
 module "scheduled_query_alert" {
   for_each = var.query_alerts
 
-  source = "git::ssh://git@github.com/launchbynttdata/tf-azurerm-module_primitive-monitor_scheduled_query_alert.git?ref=feature/10489-query-alert"
+  source = "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-monitor_scheduled_query_alert.git?ref=feature/10489-query-alert"
 
   resource_group_name = module.resource_group.name
   location            = var.location
