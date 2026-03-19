@@ -73,7 +73,8 @@ module "monitor_action_group" {
 module "scheduled_query_alert" {
   for_each = var.query_alerts
 
-  source = "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-monitor_scheduled_query_alert.git?ref=feature/10489-query-alert"
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/monitor_scheduled_query_alert/azurerm"
+  version = "~> 1.0"
 
   resource_group_name = module.resource_group.name
   location            = var.location
