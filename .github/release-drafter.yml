@@ -25,13 +25,13 @@ categories:
 autolabeler:
   - label: "major"
     branch:
-      - '/(patch|bug|fix|feature)!\/.+/'
+      - '/(patch|bug|fix|feature|feat|chore)!\/.+/'
   - label: "minor"
     branch:
-      - '/feature\/.+/'
+      - '/(feature|feat)\/.+/'
   - label: "patch"
     branch:
-      - '/(patch|bug|fix)\/.+/'
+      - '/(patch|bug|fix|chore)\/.+/'
 
 change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
 
