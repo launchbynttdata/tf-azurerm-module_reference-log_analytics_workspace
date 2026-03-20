@@ -12,8 +12,6 @@ permissions:
 jobs:
   check:
     name: "Check Azure Terraform Code"
-    # Remove the following line after copying to your own repository
-    if: github.event.pull_request.head.repo.full_name != 'launchbynttdata/lcaf-skeleton-terraform'
     permissions:
       contents: read
       id-token: write
