@@ -83,12 +83,14 @@ module "scheduled_query_alert" {
 
   data_source_id = module.azurerm_log_analytics_workspace.id
 
-  description = each.value.description
-  enabled     = each.value.enabled
-  query       = each.value.query
-  severity    = each.value.severity
-  frequency   = each.value.frequency
-  time_window = each.value.time_window
+  description            = each.value.description
+  email_subject          = each.value.email_subject
+  custom_webhook_payload = coalesce(each.value.custom_webhook_payload, "{}")
+  enabled                = each.value.enabled
+  query                  = each.value.query
+  severity               = each.value.severity
+  frequency              = each.value.frequency
+  time_window            = each.value.time_window
 
   trigger_operator  = each.value.trigger_operator
   trigger_threshold = each.value.trigger_threshold

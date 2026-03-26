@@ -165,7 +165,7 @@ variable "query_alerts" {
     trigger_operator       = string
     trigger_threshold      = number
     email_subject          = optional(string)
-    custom_webhook_payload = optional(map(string))
+    custom_webhook_payload = optional(string)
   }))
   default = {}
 }

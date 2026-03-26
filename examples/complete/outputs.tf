@@ -29,3 +29,18 @@ output "resource_group_name" {
   description = "The Log Analytics Workspace resource group name"
   value       = module.log_analytics_workspace.resource_group_name
 }
+
+output "action_group_id" {
+  description = "The ID of the Monitor Action Group"
+  value       = module.log_analytics_workspace.action_group_id
+}
+
+output "action_group_name" {
+  description = "The name of the Monitor Action Group"
+  value       = module.log_analytics_workspace.action_group_name
+}
+
+output "scheduled_query_alerts" {
+  description = "Map of scheduled query alert IDs and names"
+  value       = module.log_analytics_workspace.scheduled_query_alerts
+}

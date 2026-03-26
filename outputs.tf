@@ -41,3 +41,23 @@ output "resource_group_name" {
   description = "The Log Analytics resource group name"
   value       = module.resource_names["resource_group"].standard
 }
+
+output "action_group_id" {
+  description = "The ID of the Monitor Action Group"
+  value       = length(module.monitor_action_group) > 0 ? module.monitor_action_group[0].action_group_id : null
+}
+
+output "action_group_name" {
+  description = "The name of the Monitor Action Group"
+  value       = length(module.monitor_action_group) > 0 ? module.monitor_action_group[0].action_group_name : null
+}
+
+output "scheduled_query_alerts" {
+  description = "Map of scheduled query alert IDs and names"
+  value = {
+    for k, alert in module.scheduled_query_alert : k => {
+      id   = alert.scheduled_query_alert_id
+      name = alert.scheduled_query_alert_name
+    }
+  }
+}

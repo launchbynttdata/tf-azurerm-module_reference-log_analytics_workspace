@@ -146,7 +146,7 @@ No resources.
 | <a name="input_class_env"></a> [class\_env](#input\_class\_env) | (Required) Environment where resource is going to be deployed. For example. dev, qa, uat | `string` | `"dev"` | no |
 | <a name="input_use_azure_region_abbr"></a> [use\_azure\_region\_abbr](#input\_use\_azure\_region\_abbr) | (Optional) Whether to use Azure region abbreviation e.g. eastus -> eus | `bool` | `true` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | (Optional) A mapping of tags to assign to the resource. | `map(string)` | `{}` | no |
-| <a name="input_query_alerts"></a> [query\_alerts](#input\_query\_alerts) | Map of scheduled query alerts to create | <pre>map(object({<br/>    description            = string<br/>    enabled                = bool<br/>    query                  = string<br/>    severity               = number<br/>    frequency              = number<br/>    time_window            = number<br/>    trigger_operator       = string<br/>    trigger_threshold      = number<br/>    email_subject          = optional(string)<br/>    custom_webhook_payload = optional(map(string))<br/>  }))</pre> | `{}` | no |
+| <a name="input_query_alerts"></a> [query\_alerts](#input\_query\_alerts) | Map of scheduled query alerts to create | <pre>map(object({<br/>    description            = string<br/>    enabled                = bool<br/>    query                  = string<br/>    severity               = number<br/>    frequency              = number<br/>    time_window            = number<br/>    trigger_operator       = string<br/>    trigger_threshold      = number<br/>    email_subject          = optional(string)<br/>    custom_webhook_payload = optional(string)<br/>  }))</pre> | `{}` | no |
 | <a name="input_action_group_config"></a> [action\_group\_config](#input\_action\_group\_config) | Configuration for action group (created only if alerts exist) | <pre>object({<br/>    short_name         = string<br/>    arm_role_receivers = optional(list(any), [])<br/>    email_receivers    = optional(list(any), [])<br/>  })</pre> | `null` | no |
 
 ## Outputs
@@ -159,4 +159,7 @@ No resources.
 | <a name="output_primary_shared_key"></a> [primary\_shared\_key](#output\_primary\_shared\_key) | Value of the primary shared key for the Log Analytics Workspace. |
 | <a name="output_secondary_shared_key"></a> [secondary\_shared\_key](#output\_secondary\_shared\_key) | Value of the secondary shared key for the Log Analytics Workspace. |
 | <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | The Log Analytics resource group name |
+| <a name="output_action_group_id"></a> [action\_group\_id](#output\_action\_group\_id) | The ID of the Monitor Action Group |
+| <a name="output_action_group_name"></a> [action\_group\_name](#output\_action\_group\_name) | The name of the Monitor Action Group |
+| <a name="output_scheduled_query_alerts"></a> [scheduled\_query\_alerts](#output\_scheduled\_query\_alerts) | Map of scheduled query alert IDs and names |
 <!-- END_TF_DOCS -->
