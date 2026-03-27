@@ -16,4 +16,13 @@ module "log_analytics_workspace" {
   location          = var.location
   sku               = var.sku
   retention_in_days = var.retention_in_days
+
+  # Optional Alerts
+  query_alerts        = var.query_alerts
+  action_group_config = var.action_group_config
+
+  tags = {
+    environment = "test"
+    purpose     = "monitor-law-with-alert"
+  }
 }

@@ -27,3 +27,28 @@ variable "retention_in_days" {
   description = "The workspace data retention in days. Possible values are of the range between 30 and 730."
   default     = 30
 }
+
+variable "query_alerts" {
+  description = "Optional scheduled query alerts"
+  type = map(object({
+    description       = string
+    enabled           = bool
+    query             = string
+    severity          = number
+    frequency         = number
+    time_window       = number
+    trigger_operator  = string
+    trigger_threshold = number
+  }))
+  default = {}
+}
+
+variable "action_group_config" {
+  description = "Optional action group config"
+  type = object({
+    short_name         = string
+    arm_role_receivers = optional(list(any), [])
+    email_receivers    = optional(list(any), [])
+  })
+  default = null
+}
