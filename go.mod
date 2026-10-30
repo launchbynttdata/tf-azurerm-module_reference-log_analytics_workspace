@@ -1,6 +1,6 @@
 module github.com/launchbynttdata/tf-azurerm-module_reference-log_analytics_workspace
 
-go 1.26.7
+go 1.26.1
 
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.22.0

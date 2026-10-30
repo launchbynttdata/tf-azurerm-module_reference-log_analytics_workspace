@@ -156,18 +156,14 @@ If `make check` target is successful, developer is good to commit the code to pr
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.5 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 4.69, < 5.0 |
 
-## Providers
-
-No providers.
-
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_resource_names"></a> [resource\_names](#module\_resource\_names) | terraform.registry.launch.nttdata.com/module_library/resource_name/launch | ~> 2.0 |
-| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm | ~> 1.0 |
 | <a name="module_azurerm_log_analytics_workspace"></a> [azurerm\_log\_analytics\_workspace](#module\_azurerm\_log\_analytics\_workspace) | terraform.registry.launch.nttdata.com/module_primitive/log_analytics_workspace/azurerm | ~> 2.0 |
 | <a name="module_monitor_action_group"></a> [monitor\_action\_group](#module\_monitor\_action\_group) | terraform.registry.launch.nttdata.com/module_primitive/monitor_action_group/azurerm | ~> 1.0 |
+| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm | ~> 1.0 |
+| <a name="module_resource_names"></a> [resource\_names](#module\_resource\_names) | terraform.registry.launch.nttdata.com/module_library/resource_name/launch | ~> 2.0 |
 | <a name="module_scheduled_query_alert"></a> [scheduled\_query\_alert](#module\_scheduled\_query\_alert) | terraform.registry.launch.nttdata.com/module_primitive/monitor_scheduled_query_alert/azurerm | ~> 2.0 |
 
 ## Resources
@@ -178,33 +174,33 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_sku"></a> [sku](#input\_sku) | (Optional) Specifies the SKU of the Log Analytics Workspace. PerGB2018 and CapacityReservation are recommended. Other possible values are PerNode, Standalone, and Unlimited. Defaults to PerGB2018. | `string` | `null` | no |
-| <a name="input_retention_in_days"></a> [retention\_in\_days](#input\_retention\_in\_days) | (Optional) The workspace data retention in days. Possible values are in the range between 30 and 730. | `number` | `30` | no |
-| <a name="input_local_authentication_disabled"></a> [local\_authentication\_disabled](#input\_local\_authentication\_disabled) | (Optional) Boolean flag to specify whether local authentication should be disabled. Defaults to false. | `bool` | `false` | no |
+| <a name="input_action_group_config"></a> [action\_group\_config](#input\_action\_group\_config) | Configuration for action group (created only if alerts exist) | <pre>object({<br/>    short_name         = string<br/>    arm_role_receivers = optional(list(any), [])<br/>    email_receivers    = optional(list(any), [])<br/>  })</pre> | `null` | no |
+| <a name="input_class_env"></a> [class\_env](#input\_class\_env) | (Required) Environment where resource is going to be deployed. For example. dev, qa, uat | `string` | `"dev"` | no |
 | <a name="input_identity"></a> [identity](#input\_identity) | (Optional) A identity block as defined below.<br/>  type: Specifies the identity type of the Log Analytics Workspace. Possible values are SystemAssigned and UserAssigned.<br/>  identity\_ids: Specifies the list of User Assigned Identity IDs to be associated with the Log Analytics Workspace. This field is required when type is UserAssigned. | <pre>object({<br/>    type         = string<br/>    identity_ids = optional(list(string))<br/>  })</pre> | `null` | no |
-| <a name="input_location"></a> [location](#input\_location) | (Required) Specifies the supported Azure location where the resource exists. Changing this forces a new resource to be created. | `string` | n/a | yes |
-| <a name="input_resource_names_map"></a> [resource\_names\_map](#input\_resource\_names\_map) | (Optional) A map of key to resource\_name that will be used by tf-launch-module\_library-resource\_name to generate resource names | <pre>map(object({<br/>    name       = string<br/>    max_length = optional(number, 60)<br/>  }))</pre> | <pre>{<br/>  "log_analytics_workspace": {<br/>    "max_length": 60,<br/>    "name": "law"<br/>  },<br/>  "monitor_action_group": {<br/>    "max_length": 60,<br/>    "name": "mag"<br/>  },<br/>  "resource_group": {<br/>    "max_length": 60,<br/>    "name": "rg"<br/>  },<br/>  "scheduled_query_alert": {<br/>    "max_length": 60,<br/>    "name": "sqa"<br/>  }<br/>}</pre> | no |
 | <a name="input_instance_env"></a> [instance\_env](#input\_instance\_env) | (Optional) Number that represents the instance of the environment. | `number` | `0` | no |
 | <a name="input_instance_resource"></a> [instance\_resource](#input\_instance\_resource) | (Optional) Number that represents the instance of the resource. | `number` | `0` | no |
+| <a name="input_local_authentication_disabled"></a> [local\_authentication\_disabled](#input\_local\_authentication\_disabled) | (Optional) Boolean flag to specify whether local authentication should be disabled. Defaults to false. | `bool` | `false` | no |
+| <a name="input_location"></a> [location](#input\_location) | (Required) Specifies the supported Azure location where the resource exists. Changing this forces a new resource to be created. | `string` | n/a | yes |
 | <a name="input_product_family"></a> [product\_family](#input\_product\_family) | (Required) Name of the product family for which the resource is created | `string` | `"launch"` | no |
 | <a name="input_product_service"></a> [product\_service](#input\_product\_service) | (Required) Name of the product service for which the resource is created | `string` | `"law"` | no |
-| <a name="input_class_env"></a> [class\_env](#input\_class\_env) | (Required) Environment where resource is going to be deployed. For example. dev, qa, uat | `string` | `"dev"` | no |
-| <a name="input_use_azure_region_abbr"></a> [use\_azure\_region\_abbr](#input\_use\_azure\_region\_abbr) | (Optional) Whether to use Azure region abbreviation e.g. eastus -> eus | `bool` | `true` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | (Optional) A mapping of tags to assign to the resource. | `map(string)` | `{}` | no |
 | <a name="input_query_alerts"></a> [query\_alerts](#input\_query\_alerts) | Map of scheduled query alerts to create against this workspace. Each key becomes a name suffix on<br/>the generated alert name. The shape follows azurerm\_monitor\_scheduled\_query\_rules\_alert\_v2; see the<br/>monitor\_scheduled\_query\_alert primitive for the per-field detail, which this module passes through<br/>and does not re-validate.<br/><br/>criteria.query must be valid against this workspace's schema, because Azure checks it on create<br/>unless skip\_query\_validation is true. A query that splits by a column must project that column, and<br/>one that aggregates a value must project the metric\_measure\_column. | <pre>map(object({<br/>    description  = optional(string, "")<br/>    display_name = optional(string)<br/>    enabled      = optional(bool, true)<br/>    severity     = optional(number, 1)<br/><br/>    evaluation_frequency = optional(string, "PT5M")<br/>    window_duration      = optional(string, "PT30M")<br/><br/>    criteria = object({<br/>      query                   = string<br/>      threshold               = number<br/>      operator                = optional(string, "GreaterThan")<br/>      time_aggregation_method = optional(string, "Count")<br/>      metric_measure_column   = optional(string)<br/>      resource_id_column      = optional(string)<br/>      dimensions = optional(list(object({<br/>        name     = string<br/>        values   = list(string)<br/>        operator = optional(string, "Include")<br/>      })), [])<br/>      failing_periods = optional(object({<br/>        minimum_failing_periods_to_trigger_alert = number<br/>        number_of_evaluation_periods             = number<br/>      }))<br/>    })<br/><br/>    auto_mitigation_enabled           = optional(bool, false)<br/>    mute_actions_after_alert_duration = optional(string)<br/>    query_time_range_override         = optional(string)<br/>    skip_query_validation             = optional(bool, false)<br/>    target_resource_types             = optional(list(string), [])<br/>    workspace_alerts_storage_enabled  = optional(bool, false)<br/><br/>    email_subject     = optional(string)<br/>    custom_properties = optional(map(string), {})<br/><br/>    identity = optional(object({<br/>      type         = string<br/>      identity_ids = optional(list(string), [])<br/>    }))<br/>  }))</pre> | `{}` | no |
-| <a name="input_action_group_config"></a> [action\_group\_config](#input\_action\_group\_config) | Configuration for action group (created only if alerts exist) | <pre>object({<br/>    short_name         = string<br/>    arm_role_receivers = optional(list(any), [])<br/>    email_receivers    = optional(list(any), [])<br/>  })</pre> | `null` | no |
+| <a name="input_resource_names_map"></a> [resource\_names\_map](#input\_resource\_names\_map) | (Optional) A map of key to resource\_name that will be used by tf-launch-module\_library-resource\_name to generate resource names | <pre>map(object({<br/>    name       = string<br/>    max_length = optional(number, 60)<br/>  }))</pre> | <pre>{<br/>  "log_analytics_workspace": {<br/>    "max_length": 60,<br/>    "name": "law"<br/>  },<br/>  "monitor_action_group": {<br/>    "max_length": 60,<br/>    "name": "mag"<br/>  },<br/>  "resource_group": {<br/>    "max_length": 60,<br/>    "name": "rg"<br/>  },<br/>  "scheduled_query_alert": {<br/>    "max_length": 60,<br/>    "name": "sqa"<br/>  }<br/>}</pre> | no |
+| <a name="input_retention_in_days"></a> [retention\_in\_days](#input\_retention\_in\_days) | (Optional) The workspace data retention in days. Possible values are in the range between 30 and 730. | `number` | `30` | no |
+| <a name="input_sku"></a> [sku](#input\_sku) | (Optional) Specifies the SKU of the Log Analytics Workspace. PerGB2018 and CapacityReservation are recommended. Other possible values are PerNode, Standalone, and Unlimited. Defaults to PerGB2018. | `string` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | (Optional) A mapping of tags to assign to the resource. | `map(string)` | `{}` | no |
+| <a name="input_use_azure_region_abbr"></a> [use\_azure\_region\_abbr](#input\_use\_azure\_region\_abbr) | (Optional) Whether to use Azure region abbreviation e.g. eastus -> eus | `bool` | `true` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_id"></a> [id](#output\_id) | The Log Analytics resource ID. |
-| <a name="output_name"></a> [name](#output\_name) | The Log Analytics Workspace name. |
-| <a name="output_workspace_id"></a> [workspace\_id](#output\_workspace\_id) | The Workspace (or Customer) ID for the Log Analytics Workspace. |
-| <a name="output_primary_shared_key"></a> [primary\_shared\_key](#output\_primary\_shared\_key) | Value of the primary shared key for the Log Analytics Workspace. |
-| <a name="output_secondary_shared_key"></a> [secondary\_shared\_key](#output\_secondary\_shared\_key) | Value of the secondary shared key for the Log Analytics Workspace. |
-| <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | The Log Analytics resource group name |
 | <a name="output_action_group_id"></a> [action\_group\_id](#output\_action\_group\_id) | The ID of the Monitor Action Group |
 | <a name="output_action_group_name"></a> [action\_group\_name](#output\_action\_group\_name) | The name of the Monitor Action Group |
+| <a name="output_id"></a> [id](#output\_id) | The Log Analytics resource ID. |
+| <a name="output_name"></a> [name](#output\_name) | The Log Analytics Workspace name. |
+| <a name="output_primary_shared_key"></a> [primary\_shared\_key](#output\_primary\_shared\_key) | Value of the primary shared key for the Log Analytics Workspace. |
+| <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | The Log Analytics resource group name |
 | <a name="output_scheduled_query_alerts"></a> [scheduled\_query\_alerts](#output\_scheduled\_query\_alerts) | Map of scheduled query alert IDs, names and identity principal IDs. principal\_id is null unless the alert was given a SystemAssigned identity. |
+| <a name="output_secondary_shared_key"></a> [secondary\_shared\_key](#output\_secondary\_shared\_key) | Value of the secondary shared key for the Log Analytics Workspace. |
+| <a name="output_workspace_id"></a> [workspace\_id](#output\_workspace\_id) | The Workspace (or Customer) ID for the Log Analytics Workspace. |
 <!-- END_TF_DOCS -->
