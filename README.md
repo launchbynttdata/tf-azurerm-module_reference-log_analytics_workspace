@@ -7,6 +7,51 @@
 
 Manages a Log Analytics (formally Operational Insights) Workspace.
 
+## Upgrading from 1.x
+
+2.0.0 moves the composed `monitor_scheduled_query_alert` primitive from 1.x to 2.x, which replaces
+`azurerm_monitor_scheduled_query_rules_alert` with
+`azurerm_monitor_scheduled_query_rules_alert_v2`. The azurerm floor moves from `~> 3.117` to
+`>= 4.69, < 5.0`, because 4.69 is where the provider added `email_subject` to the v2 `action` block.
+
+The composed `log_analytics_workspace` primitive also moves from `~> 1.2` to `~> 2.0`. That bump is
+not required by the provider floor — the 1.x line already declares `azurerm >= 3.77, < 5.0` — it
+just moves onto the current major. Its interface is unchanged across the bump.
+
+### `query_alerts` is a different shape
+
+Every alert field changed. The map now takes a nested `criteria` object instead of flat
+`query` / `trigger_*` fields, ISO 8601 durations instead of minutes, and `custom_properties`
+instead of a webhook JSON string:
+
+| 1.x | 2.x |
+|-----|-----|
+| `query`, `trigger_operator`, `trigger_threshold` | `criteria.query`, `criteria.operator`, `criteria.threshold`, plus `criteria.time_aggregation_method` |
+| `frequency` (minutes) | `evaluation_frequency` (ISO 8601, e.g. `PT5M`) |
+| `time_window` (minutes) | `window_duration` (ISO 8601, e.g. `PT30M`) |
+| `custom_webhook_payload` (JSON string) | `custom_properties` (`map(string)`) |
+| — | `criteria.dimensions`, `criteria.failing_periods`, `criteria.metric_measure_column`, `criteria.resource_id_column` |
+| — | `display_name`, `auto_mitigation_enabled`, `mute_actions_after_alert_duration`, `query_time_range_override`, `skip_query_validation`, `target_resource_types`, `workspace_alerts_storage_enabled`, `identity` |
+
+`custom_properties` is a replacement rather than a rename: the 1.x value was the entire webhook JSON
+body, while `custom_properties` is a flat map of properties added to Azure's own alert payload.
+
+### The alerts are replaced, not updated
+
+The underlying resource type changes, so no `moved` block can carry state — Terraform destroys each
+v1 rule and creates a v2 one, losing alert history but nothing else. Because both types address the
+same ARM resource, a replacement that keeps the same alert name will hit the provider's import check
+and fail while the old rule still exists. The alert name is derived from `resource_names_map` plus
+the `query_alerts` key, so **changing the key is the simplest way to get a new name**; otherwise
+apply the removal of the 1.x alerts before adding the 2.x ones.
+
+### Queries are validated against the workspace
+
+Azure checks `criteria.query` against the workspace schema on create, so a query referencing a table
+the workspace has no schema for is rejected at apply time. Set `skip_query_validation` on the alert
+to bypass that. A query that splits by a column must project that column, and one that aggregates a
+value must project its `metric_measure_column`.
+
 ## Pre-Commit hooks
 
 [.pre-commit-config.yaml](.pre-commit-config.yaml) file defines certain `pre-commit` hooks that are relevant to terraform, golang and common linting tasks. There are no custom hooks added.
@@ -108,8 +153,8 @@ If `make check` target is successful, developer is good to commit the code to pr
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.117 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.5 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 4.69, < 5.0 |
 
 ## Providers
 
@@ -121,9 +166,9 @@ No providers.
 |------|--------|---------|
 | <a name="module_resource_names"></a> [resource\_names](#module\_resource\_names) | terraform.registry.launch.nttdata.com/module_library/resource_name/launch | ~> 2.0 |
 | <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm | ~> 1.0 |
-| <a name="module_azurerm_log_analytics_workspace"></a> [azurerm\_log\_analytics\_workspace](#module\_azurerm\_log\_analytics\_workspace) | terraform.registry.launch.nttdata.com/module_primitive/log_analytics_workspace/azurerm | ~> 1.2 |
+| <a name="module_azurerm_log_analytics_workspace"></a> [azurerm\_log\_analytics\_workspace](#module\_azurerm\_log\_analytics\_workspace) | terraform.registry.launch.nttdata.com/module_primitive/log_analytics_workspace/azurerm | ~> 2.0 |
 | <a name="module_monitor_action_group"></a> [monitor\_action\_group](#module\_monitor\_action\_group) | terraform.registry.launch.nttdata.com/module_primitive/monitor_action_group/azurerm | ~> 1.0 |
-| <a name="module_scheduled_query_alert"></a> [scheduled\_query\_alert](#module\_scheduled\_query\_alert) | terraform.registry.launch.nttdata.com/module_primitive/monitor_scheduled_query_alert/azurerm | ~> 1.0 |
+| <a name="module_scheduled_query_alert"></a> [scheduled\_query\_alert](#module\_scheduled\_query\_alert) | terraform.registry.launch.nttdata.com/module_primitive/monitor_scheduled_query_alert/azurerm | ~> 2.0 |
 
 ## Resources
 
@@ -146,7 +191,7 @@ No resources.
 | <a name="input_class_env"></a> [class\_env](#input\_class\_env) | (Required) Environment where resource is going to be deployed. For example. dev, qa, uat | `string` | `"dev"` | no |
 | <a name="input_use_azure_region_abbr"></a> [use\_azure\_region\_abbr](#input\_use\_azure\_region\_abbr) | (Optional) Whether to use Azure region abbreviation e.g. eastus -> eus | `bool` | `true` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | (Optional) A mapping of tags to assign to the resource. | `map(string)` | `{}` | no |
-| <a name="input_query_alerts"></a> [query\_alerts](#input\_query\_alerts) | Map of scheduled query alerts to create | <pre>map(object({<br/>    description            = string<br/>    enabled                = bool<br/>    query                  = string<br/>    severity               = number<br/>    frequency              = number<br/>    time_window            = number<br/>    trigger_operator       = string<br/>    trigger_threshold      = number<br/>    email_subject          = optional(string)<br/>    custom_webhook_payload = optional(string)<br/>  }))</pre> | `{}` | no |
+| <a name="input_query_alerts"></a> [query\_alerts](#input\_query\_alerts) | Map of scheduled query alerts to create against this workspace. Each key becomes a name suffix on<br/>the generated alert name. The shape follows azurerm\_monitor\_scheduled\_query\_rules\_alert\_v2; see the<br/>monitor\_scheduled\_query\_alert primitive for the per-field detail, which this module passes through<br/>and does not re-validate.<br/><br/>criteria.query must be valid against this workspace's schema, because Azure checks it on create<br/>unless skip\_query\_validation is true. A query that splits by a column must project that column, and<br/>one that aggregates a value must project the metric\_measure\_column. | <pre>map(object({<br/>    description  = optional(string, "")<br/>    display_name = optional(string)<br/>    enabled      = optional(bool, true)<br/>    severity     = optional(number, 1)<br/><br/>    evaluation_frequency = optional(string, "PT5M")<br/>    window_duration      = optional(string, "PT30M")<br/><br/>    criteria = object({<br/>      query                   = string<br/>      threshold               = number<br/>      operator                = optional(string, "GreaterThan")<br/>      time_aggregation_method = optional(string, "Count")<br/>      metric_measure_column   = optional(string)<br/>      resource_id_column      = optional(string)<br/>      dimensions = optional(list(object({<br/>        name     = string<br/>        values   = list(string)<br/>        operator = optional(string, "Include")<br/>      })), [])<br/>      failing_periods = optional(object({<br/>        minimum_failing_periods_to_trigger_alert = number<br/>        number_of_evaluation_periods             = number<br/>      }))<br/>    })<br/><br/>    auto_mitigation_enabled           = optional(bool, false)<br/>    mute_actions_after_alert_duration = optional(string)<br/>    query_time_range_override         = optional(string)<br/>    skip_query_validation             = optional(bool, false)<br/>    target_resource_types             = optional(list(string), [])<br/>    workspace_alerts_storage_enabled  = optional(bool, false)<br/><br/>    email_subject     = optional(string)<br/>    custom_properties = optional(map(string), {})<br/><br/>    identity = optional(object({<br/>      type         = string<br/>      identity_ids = optional(list(string), [])<br/>    }))<br/>  }))</pre> | `{}` | no |
 | <a name="input_action_group_config"></a> [action\_group\_config](#input\_action\_group\_config) | Configuration for action group (created only if alerts exist) | <pre>object({<br/>    short_name         = string<br/>    arm_role_receivers = optional(list(any), [])<br/>    email_receivers    = optional(list(any), [])<br/>  })</pre> | `null` | no |
 
 ## Outputs
@@ -161,5 +206,5 @@ No resources.
 | <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | The Log Analytics resource group name |
 | <a name="output_action_group_id"></a> [action\_group\_id](#output\_action\_group\_id) | The ID of the Monitor Action Group |
 | <a name="output_action_group_name"></a> [action\_group\_name](#output\_action\_group\_name) | The name of the Monitor Action Group |
-| <a name="output_scheduled_query_alerts"></a> [scheduled\_query\_alerts](#output\_scheduled\_query\_alerts) | Map of scheduled query alert IDs and names |
+| <a name="output_scheduled_query_alerts"></a> [scheduled\_query\_alerts](#output\_scheduled\_query\_alerts) | Map of scheduled query alert IDs, names and identity principal IDs. principal\_id is null unless the alert was given a SystemAssigned identity. |
 <!-- END_TF_DOCS -->

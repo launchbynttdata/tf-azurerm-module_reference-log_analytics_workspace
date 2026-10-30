@@ -11,12 +11,14 @@
 // limitations under the License.
 
 terraform {
-  required_version = "~> 1.0"
+  required_version = "~> 1.5"
 
   required_providers {
     azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.117"
+      source = "hashicorp/azurerm"
+      # monitor_scheduled_query_alert 2.x requires 4.69, where the provider added
+      # email_subject to the action block of the v2 scheduled query rule.
+      version = ">= 4.69, < 5.0"
     }
   }
 }

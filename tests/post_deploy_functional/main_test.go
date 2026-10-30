@@ -38,5 +38,5 @@ func TestLogAnalyticsModule(t *testing.T) {
 		}).
 		Build()
 
-	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestLogAnalyticsWorkspace)
+	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestComposableLogAnalyticsWorkspace)
 }

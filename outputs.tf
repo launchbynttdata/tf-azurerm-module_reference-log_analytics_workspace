@@ -53,11 +53,12 @@ output "action_group_name" {
 }
 
 output "scheduled_query_alerts" {
-  description = "Map of scheduled query alert IDs and names"
+  description = "Map of scheduled query alert IDs, names and identity principal IDs. principal_id is null unless the alert was given a SystemAssigned identity."
   value = {
     for k, alert in module.scheduled_query_alert : k => {
-      id   = alert.scheduled_query_alert_id
-      name = alert.scheduled_query_alert_name
+      id           = alert.scheduled_query_alert_id
+      name         = alert.scheduled_query_alert_name
+      principal_id = alert.scheduled_query_alert_principal_id
     }
   }
 }

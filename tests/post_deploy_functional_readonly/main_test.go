@@ -38,5 +38,5 @@ func TestLogAnalyticsModule(t *testing.T) {
 		}).
 		Build()
 
-	lib.RunNonDestructiveTest(t, *ctx, testimpl.TestLogAnalyticsWorkspace)
+	lib.RunNonDestructiveTest(t, *ctx, testimpl.TestComposableLogAnalyticsWorkspace)
 }

@@ -41,6 +41,6 @@ output "action_group_name" {
 }
 
 output "scheduled_query_alerts" {
-  description = "Map of scheduled query alert IDs and names"
+  description = "Map of scheduled query alert IDs, names and identity principal IDs"
   value       = module.log_analytics_workspace.scheduled_query_alerts
 }
