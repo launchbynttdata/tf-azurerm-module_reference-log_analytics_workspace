@@ -39,11 +39,14 @@ body, while `custom_properties` is a flat map of properties added to Azure's own
 ### The alerts are replaced, not updated
 
 The underlying resource type changes, so no `moved` block can carry state — Terraform destroys each
-v1 rule and creates a v2 one, losing alert history but nothing else. Because both types address the
-same ARM resource, a replacement that keeps the same alert name will hit the provider's import check
-and fail while the old rule still exists. The alert name is derived from `resource_names_map` plus
-the `query_alerts` key, so **changing the key is the simplest way to get a new name**; otherwise
-apply the removal of the 1.x alerts before adding the 2.x ones.
+v1 rule and creates a v2 one, losing the alert history. The workspace, resource group and action
+group keep their module addresses, and the Log Analytics primitive's resource definition is the same
+across 1.x and 2.x. Moving from azurerm 3.x to 4.x can still change other resources, so read your own
+plan before applying. Because both types address the same ARM resource, a replacement that keeps the
+same alert name will hit the provider's import check and fail while the old rule still exists. The
+alert name is derived from `resource_names_map` plus the `query_alerts` key, so **changing the key is
+the simplest way to get a new name**; otherwise apply the removal of the 1.x alerts before adding the
+2.x ones.
 
 ### Queries are validated against the workspace
 
