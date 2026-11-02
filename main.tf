@@ -39,7 +39,7 @@ module "resource_group" {
 
 module "azurerm_log_analytics_workspace" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/log_analytics_workspace/azurerm"
-  version = "~> 1.2"
+  version = "~> 2.0"
 
   name                          = module.resource_names["log_analytics_workspace"].standard
   location                      = var.location
@@ -74,26 +74,35 @@ module "scheduled_query_alert" {
   for_each = var.query_alerts
 
   source  = "terraform.registry.launch.nttdata.com/module_primitive/monitor_scheduled_query_alert/azurerm"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
   resource_group_name = module.resource_group.name
   location            = var.location
 
   alert_name = "${module.resource_names["scheduled_query_alert"].standard}-${each.key}"
 
-  data_source_id = module.azurerm_log_analytics_workspace.id
+  scope_id = module.azurerm_log_analytics_workspace.id
 
-  description            = each.value.description
-  email_subject          = each.value.email_subject
-  custom_webhook_payload = coalesce(each.value.custom_webhook_payload, "{}")
-  enabled                = each.value.enabled
-  query                  = each.value.query
-  severity               = each.value.severity
-  frequency              = each.value.frequency
-  time_window            = each.value.time_window
+  description  = each.value.description
+  display_name = each.value.display_name
+  enabled      = each.value.enabled
+  severity     = each.value.severity
 
-  trigger_operator  = each.value.trigger_operator
-  trigger_threshold = each.value.trigger_threshold
+  evaluation_frequency = each.value.evaluation_frequency
+  window_duration      = each.value.window_duration
+
+  criteria = each.value.criteria
+
+  auto_mitigation_enabled           = each.value.auto_mitigation_enabled
+  mute_actions_after_alert_duration = each.value.mute_actions_after_alert_duration
+  query_time_range_override         = each.value.query_time_range_override
+  skip_query_validation             = each.value.skip_query_validation
+  target_resource_types             = each.value.target_resource_types
+  workspace_alerts_storage_enabled  = each.value.workspace_alerts_storage_enabled
+
+  email_subject     = each.value.email_subject
+  custom_properties = each.value.custom_properties
+  identity          = each.value.identity
 
   action_group_ids = length(module.monitor_action_group) > 0 ? [module.monitor_action_group[0].action_group_id] : []
 

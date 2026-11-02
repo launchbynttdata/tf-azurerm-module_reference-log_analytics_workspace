@@ -53,11 +53,14 @@ output "action_group_name" {
 }
 
 output "scheduled_query_alerts" {
-  description = "Map of scheduled query alert IDs and names"
+  description = "Map of scheduled query alert IDs, names and identity principal IDs. principal_id is null unless the alert was given a SystemAssigned identity; Azure exposes no principal on the rule for a UserAssigned identity, so it is null there too."
   value = {
     for k, alert in module.scheduled_query_alert : k => {
       id   = alert.scheduled_query_alert_id
       name = alert.scheduled_query_alert_name
+      # The alert module returns an empty string for UserAssigned identities; normalize it to null
+      # so a consumer checking `!= null` never mistakes it for a principal ID.
+      principal_id = try(coalesce(alert.scheduled_query_alert_principal_id), null)
     }
   }
 }
