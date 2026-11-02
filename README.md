@@ -42,11 +42,16 @@ The underlying resource type changes, so no `moved` block can carry state — Te
 v1 rule and creates a v2 one, losing the alert history. The workspace, resource group and action
 group keep their module addresses, and the Log Analytics primitive's resource definition is the same
 across 1.x and 2.x. Moving from azurerm 3.x to 4.x can still change other resources, so read your own
-plan before applying. Because both types address the same ARM resource, a replacement that keeps the
-same alert name will hit the provider's import check and fail while the old rule still exists. The
-alert name is derived from `resource_names_map` plus the `query_alerts` key, so **changing the key is
-the simplest way to get a new name**; otherwise apply the removal of the 1.x alerts before adding the
-2.x ones.
+plan before applying.
+
+Both Terraform resource types manage the same ARM resource type,
+`Microsoft.Insights/scheduledQueryRules`, and differ only in API version. A v1 rule and a v2 rule with
+the same name are therefore the same ARM ID. The v2 create fails the provider's import check while a
+rule already exists at that ID, and Terraform does not order the v1 destroy before the v2 create,
+because they are separate resources with no dependency between them. A replacement that keeps the same
+alert name therefore depends on timing. The alert name is derived from `resource_names_map` plus the
+`query_alerts` key, so **changing the key is the simplest way to get a new name**; otherwise apply the
+removal of the 1.x alerts before adding the 2.x ones.
 
 ### Queries are validated against the workspace
 
@@ -107,7 +112,7 @@ No resources.
 | <a name="output_name"></a> [name](#output\_name) | The Log Analytics Workspace name. |
 | <a name="output_primary_shared_key"></a> [primary\_shared\_key](#output\_primary\_shared\_key) | Value of the primary shared key for the Log Analytics Workspace. |
 | <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | The Log Analytics resource group name |
-| <a name="output_scheduled_query_alerts"></a> [scheduled\_query\_alerts](#output\_scheduled\_query\_alerts) | Map of scheduled query alert IDs, names and identity principal IDs. principal\_id is null unless the alert was given a SystemAssigned identity. |
+| <a name="output_scheduled_query_alerts"></a> [scheduled\_query\_alerts](#output\_scheduled\_query\_alerts) | Map of scheduled query alert IDs, names and identity principal IDs. principal\_id is null unless the alert was given a SystemAssigned identity; Azure exposes no principal on the rule for a UserAssigned identity, so it is null there too. |
 | <a name="output_secondary_shared_key"></a> [secondary\_shared\_key](#output\_secondary\_shared\_key) | Value of the secondary shared key for the Log Analytics Workspace. |
 | <a name="output_workspace_id"></a> [workspace\_id](#output\_workspace\_id) | The Workspace (or Customer) ID for the Log Analytics Workspace. |
 <!-- END_TF_DOCS -->
